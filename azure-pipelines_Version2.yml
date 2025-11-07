@@ -25,7 +25,7 @@ steps:
   displayName: "Cloudsmith: Authenticate via OIDC"
   inputs:
     authMethod: 'oidc'
-    oidcAuthOnly: false
+    oidcAuthOnly: true
     pipInstall: false           # CLI already installed globally
     cliVersion: ''
     oidcNamespace: '$(CS_WORKSPACE)'
