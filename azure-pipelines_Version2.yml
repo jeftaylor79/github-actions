@@ -1,5 +1,5 @@
 # Copyright 2025 Cloudsmith Ltd
-# Azure DevOps Pipeline: Cloudsmith OIDC Authentication Test with Python venv
+# Azure DevOps Pipeline: Cloudsmith OIDC Authentication Test
 
 trigger:
 - main
@@ -11,40 +11,22 @@ variables:
   CS_WORKSPACE: 'jtaylor-test'
   CS_REPO: 'python'
   CS_SERVICE_SLUG: 'az-service-principal-oidc'
-  CS_VENV: '$(Pipeline.Workspace)/cs-venv'
 
 steps:
 - checkout: self
 
-# setup Python venv for Cloudsmith CLI at a fixed location
-- bash: |
-    # create venv at pipeline workspace
-    python3.12 -m venv "$CS_VENV"
-    # upgrade pip in the venv, install CLI
-    "$CS_VENV/bin/pip" install --upgrade pip
-    "$CS_VENV/bin/pip" install cloudsmith-cli
-    # add venv bin to PATH for rest of pipeline
-    echo "##vso[task.prependpath]$CS_VENV/bin"
-  displayName: 'Setup Python venv and install Cloudsmith CLI'
-
-# Cloudsmith: Authenticate via OIDC using venv CLI
+# Cloudsmith: Authenticate via OIDC (Cloudsmith CLI is pre-installed globally)
 - task: CloudsmithCliSetupAndAuthenticate@1.1.1
   displayName: "Cloudsmith: Authenticate via OIDC"
   inputs:
     authMethod: 'oidc'
     oidcAuthOnly: false
-    pipInstall: false          # CLI already installed in venv
+    pipInstall: false           # CLI already installed globally
     cliVersion: ''
     oidcNamespace: '$(CS_WORKSPACE)'
     oidcServiceSlug: '$(CS_SERVICE_SLUG)'
 
-# use latest Python available on agent
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.x'
-  displayName: "Use latest Python"
-
-# verify authentication with Cloudsmith CLI in venv
+# test authentication with Cloudsmith CLI
 - bash: |
     set -eo pipefail
     cloudsmith whoami
