@@ -15,6 +15,11 @@ variables:
 steps:
 - checkout: self
 
+# Ensure pipx-installed CLI binaries (e.g. cloudsmith) are in PATH for all steps
+- script: |
+    echo "##vso[task.prependpath]$HOME/.local/bin"
+  displayName: "Prepend user-local bin to PATH"
+
 # Cloudsmith: Authenticate via OIDC (Cloudsmith CLI is pre-installed globally)
 - task: CloudsmithCliSetupAndAuthenticate@1.1.1
   displayName: "Cloudsmith: Authenticate via OIDC"
