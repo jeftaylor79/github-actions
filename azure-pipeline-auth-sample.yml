@@ -21,7 +21,7 @@ steps:
   displayName: "Prepend user-local bin to PATH"
 
 # Cloudsmith: Authenticate via OIDC (Cloudsmith CLI is pre-installed globally)
-- task: CloudsmithCliSetupAndAuthenticate@1.1.1
+- task: CloudsmithCliSetupAndAuthenticate@1.0.0
   displayName: "Cloudsmith: Authenticate via OIDC"
   inputs:
     authMethod: 'oidc'
